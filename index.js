@@ -3,7 +3,7 @@ let notes;
 let currentNote = 0;
 let ndot;
 let songStart;
-let dotSpeed = 2;
+let dotSpeed = 3;
 let notesImp;
 
 let song;
@@ -90,8 +90,32 @@ class noteDot {
     // let newAngle = previousAngle + PI / 2;
     // }
     // const newAngle = previousAngle + PI / 3;
-    const angleAddition = random(PI / 3, PI / 6);
-    const newAngle = random() < 0.5 ? previousAngle + PI + angleAddition : previousAngle + PI - angleAddition;
+    // const angleAddition = random(PI / 3, PI / 6);
+    // let angleAddition;
+    // if (int(notes[currentNote + 1] - notes[currentNote]) > int(notes[currentNote] - notes[currentNote - 1])) {
+    //   angleAddition = PI / 6;
+    // } else {
+    //   angleAddition = -PI / 6;
+    // }
+
+    const angleAddition = PI / 6;
+    let newAngle;
+    let thisAddition;
+    if (!this.lastAddition) {
+      thisAddition = random() < 0.5 ? angleAddition : -angleAddition;
+      newAngle = random() < 0.5 ? previousAngle + PI + thisAddition : previousAngle + PI + thisAddition;
+    } else {
+      if (int(notes[currentNote - 2] - notes[currentNote - 3]) - int(notes[currentNote - 1] - notes[currentNote - 2]) > 30) {
+        thisAddition = this.lastAddition;
+        newAngle = previousAngle + PI + this.lastAddition;
+      } else {
+        thisAddition = this.lastAddition * -1;
+        newAngle = previousAngle + PI + thisAddition;
+      }
+    }
+    this.lastAddition = thisAddition;
+    // const angleAddition = PI/2
+    // const newAngle = previousAngle + angleAddition;
     // console.log("\nangleAddition", angleAddition);
     console.log("newAngle", newAngle);
     this.velocity = p5.Vector.fromAngle(newAngle).mult(dotSpeed);
