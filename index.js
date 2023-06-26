@@ -3,12 +3,12 @@ let notes;
 let currentNote = 0;
 let ndot;
 let songStart;
-let dotSpeed = 3;
+let dotSpeed = 2;
 let notesImp;
 
 let song;
 
-let loaded = false;
+let playing = false;
 
 let lines = [];
 
@@ -30,17 +30,17 @@ async function loadFile() {
 }
 
 function setup() {
-  createCanvas(1500, 950);
+  createCanvas(2500, 950);
   ndot = new noteDot(width / 2, height / 2);
 }
 
 function draw() {
   background(220);
 
-  if (!loaded) return;
+  if (!playing) return;
 
   if (millis() - songStart >= notes[currentNote + 1] - notes[0]) {
-    console.log("next note", millis() - songStart);
+    // console.log("next note", millis() - songStart);
     currentNote++;
     if (currentNote >= notes.length) {
       currentNote = 0;
@@ -62,8 +62,8 @@ function draw() {
 }
 
 function mousePressed() {
-  if (loaded) return;
-  loaded = true;
+  if (playing || !song.isLoaded()) return;
+  playing = true;
   song.play();
   songStart = millis();
 }
@@ -75,49 +75,58 @@ class noteDot {
     this.velocity = createVector();
     this.lastAngle;
     this.updateVelocity();
+    this.lastAddition = 0;
   }
 
   updateVelocity() {
     this.startPos = this.pos.copy();
     const previousAngle = this.velocity.heading();
-    console.log(int(notes[currentNote + 2] - notes[currentNote + 1]), int(notes[currentNote + 1] - notes[currentNote]));
-    // let newAngle;
-    // if (parseInt((notes[currentNote + 1] - notes[currentNote]).toPrecision(2)) == parseInt((notes[currentNote] - notes[currentNote - 1]).toPrecision(2))) {
-    //   //   newAngle = previousAngle + this.lastAngle;
-    //   newAngle = previousAngle + PI / 3;
-    //   //   this.lastAngle *= -1;
-    // } else {
-    // let newAngle = previousAngle + PI / 2;
-    // }
-    // const newAngle = previousAngle + PI / 3;
-    // const angleAddition = random(PI / 3, PI / 6);
-    // let angleAddition;
-    // if (int(notes[currentNote + 1] - notes[currentNote]) > int(notes[currentNote] - notes[currentNote - 1])) {
-    //   angleAddition = PI / 6;
-    // } else {
-    //   angleAddition = -PI / 6;
-    // }
+    // console.log(int(notes[currentNote + 2] - notes[currentNote + 1]), int(notes[currentNote + 1] - notes[currentNote]));
 
     const angleAddition = PI / 6;
     let newAngle;
-    let thisAddition;
-    if (!this.lastAddition) {
-      thisAddition = random() < 0.5 ? angleAddition : -angleAddition;
-      newAngle = random() < 0.5 ? previousAngle + PI + thisAddition : previousAngle + PI + thisAddition;
+    let thisAddition = 0;
+    // if (!this.lastAddition) {
+    //   thisAddition = -PI;
+    //   newAngle = thisAddition;
+    // } else {
+    //   if (int(notes[currentNote - 2] - notes[currentNote - 3]) - int(notes[currentNote - 1] - notes[currentNote - 2]) > 50) {
+    //     console.log(
+    //       "Note of same length,",
+    //       int(notes[currentNote - 2] - notes[currentNote - 3]) - int(notes[currentNote - 1] - notes[currentNote - 2])
+    //     );
+    //     thisAddition = this.lastAddition;
+    //     newAngle = previousAngle + PI + this.lastAddition;
+    //   } else {
+    //     // thisAddition = this.lastAddition * -1;
+    //   }
+    // }
+    if (currentNote == 0) {
+      newAngle = PI;
+      thisAddition = PI;
+    } else if (currentNote == 1) {
+      let undoLastAngle = previousAngle - this.lastAddition;
+      thisAddition = random() < 0.5 ? (5 * PI) / 6 : -(5 * PI) / 6;
+      newAngle = undoLastAngle + thisAddition;
     } else {
-      if (int(notes[currentNote - 2] - notes[currentNote - 3]) - int(notes[currentNote - 1] - notes[currentNote - 2]) > 30) {
+      let undoLastAngle = previousAngle - this.lastAddition;
+      if (random() < 0.5) {
         thisAddition = this.lastAddition;
-        newAngle = previousAngle + PI + this.lastAddition;
       } else {
         thisAddition = this.lastAddition * -1;
-        newAngle = previousAngle + PI + thisAddition;
       }
+      console.log("set to", thisAddition);
+      // let thisAddition = random() < 0.5 ? (5 * PI) / 6 : -(5 * PI) / 6;
+      // console.log(thisAddition);
+      // newAngle = previousAngle + (5 * PI) / 6;
+      newAngle = previousAngle + thisAddition;
     }
     this.lastAddition = thisAddition;
+    console.log(thisAddition, this.lastAddition);
     // const angleAddition = PI/2
     // const newAngle = previousAngle + angleAddition;
     // console.log("\nangleAddition", angleAddition);
-    console.log("newAngle", newAngle);
+    // console.log("newAngle", newAngle);
     this.velocity = p5.Vector.fromAngle(newAngle).mult(dotSpeed);
   }
 
