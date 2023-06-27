@@ -1,4 +1,4 @@
-# A traced dot which bounces in time with a song
+# WIP, A traced dot which bounces in time with a song
 
 ## Based on videos like this:
 
