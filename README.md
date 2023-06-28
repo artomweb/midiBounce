@@ -2,9 +2,9 @@
 
 ## Based on videos like this:
 
-https://github.com/artomweb/midiBounce/assets/41686219/232166ec-59ff-4e0e-a230-69eef55b0981
+https://github.com/artomweb/midiBounce/assets/41686219/644bdd96-093c-472d-a893-c095e8c449fe
 
 ## Output 1:
 
-https://github.com/artomweb/midiBounce/assets/41686219/fe3fde88-68bc-4c67-9276-74d22434c63a
+https://github.com/artomweb/midiBounce/assets/41686219/898bdee0-1ec1-45ea-8aeb-fa7d8c331f76
 
